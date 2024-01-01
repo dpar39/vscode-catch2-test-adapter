@@ -23,6 +23,7 @@ export type AdvancedExecutableConfig = {
   gtest?: FrameworkSpecificConfig;
   doctest?: FrameworkSpecificConfig;
   gbenchmark?: FrameworkSpecificConfig;
+  taef?: FrameworkSpecificConfig;
   testGrouping?: TestGroupingConfig;
   executionWrapper?: ExecutionWrapperConfig;
   sourceFileMap?: Record<string, ResolvableString>;

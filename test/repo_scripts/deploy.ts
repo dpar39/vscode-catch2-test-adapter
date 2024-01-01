@@ -8,7 +8,7 @@ import * as vsce from '@vscode/vsce';
 
 ///
 
-const githubOwnerId = 'matepek';
+const githubOwnerId = 'dpar39';
 const githubRepoId = 'vscode-catch2-test-adapter';
 const githubRepoFullId = githubOwnerId + '/' + githubRepoId;
 const vscodeExtensionId = githubOwnerId + '-' + githubRepoId;

@@ -78,6 +78,10 @@ export abstract class AbstractExecutable<TestT extends AbstractTest = AbstractTe
     this._tests.set(testId, test);
   }
 
+  protected _numTests(): number {
+    return this._tests.size;
+  }
+
   protected _getTest(testId: string): TestT | undefined {
     return this._tests.get(testId) as TestT;
   }
@@ -658,10 +662,17 @@ export abstract class AbstractExecutable<TestT extends AbstractTest = AbstractTe
     return clonePath;
   }
 
+  public async getExecutablePath(forceOriginalPath: boolean = false) {
+    if (forceOriginalPath) {
+      return this.shared.path;
+    }
+    return await this._getPathForExecution();
+  }
+
   private async _runProcess(testRun: vscode.TestRun, childrenToRun: readonly AbstractTest[]): Promise<void> {
     const execParams = this._getRunParams(childrenToRun);
 
-    const pathForExecution = await this._getPathForExecution();
+    const pathForExecution = await this.getExecutablePath();
     this.shared.log.info('proc starting', pathForExecution, execParams, this.shared.path);
 
     const runInfo = await RunningExecutable.create(

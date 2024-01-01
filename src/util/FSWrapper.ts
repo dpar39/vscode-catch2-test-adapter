@@ -78,7 +78,7 @@ const nativeExecutableExtensionFilter = new Set([
   '.xml',
 ]);
 
-const win32NativeExecutableExtensionFilter = new Set(['.exe', '.cmd', '.bat']);
+const win32NativeExecutableExtensionFilter = new Set(['.exe', '.dll', '.cmd', '.bat']);
 
 export function isNativeExecutableAsync(filePath: string): Promise<void> {
   const ext = path.extname(filePath);

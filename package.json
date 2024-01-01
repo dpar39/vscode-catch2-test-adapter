@@ -1,19 +1,19 @@
 {
-  "name": "vscode-catch2-test-adapter",
-  "displayName": "C++ TestMate",
-  "description": "Run GoogleTest, Catch2 and DOCtest tests from VSCode",
+  "name": "vscode-taef-test-adapter",
+  "displayName": "C++ TAEFMate",
+  "description": "Run TAEF, GoogleTest, Catch2 and DOCtest tests from VSCode",
   "icon": "resources/icon.png",
   "author": "Mate Pek",
-  "publisher": "matepek",
-  "version": "4.8.0",
+  "publisher": "dpar39",
+  "version": "4.9.1",
   "license": "MIT",
-  "homepage": "https://github.com/matepek/vscode-catch2-test-adapter",
+  "homepage": "https://github.com/dpar39/vscode-catch2-test-adapter",
   "repository": {
     "type": "git",
-    "url": "https://github.com/matepek/vscode-catch2-test-adapter.git"
+    "url": "https://github.com/dpar39/vscode-catch2-test-adapter.git"
   },
   "bugs": {
-    "url": "https://github.com/matepek/vscode-catch2-test-adapter/issues"
+    "url": "https://github.com/dpar39/vscode-catch2-test-adapter/issues"
   },
   "categories": [
     "Testing"
@@ -35,7 +35,8 @@
     "doctest",
     "onqtam",
     "google benchmark",
-    "gbenchmark"
+    "gbenchmark",
+    "taef"
   ],
   "main": "out/dist/main.js",
   "scripts": {
@@ -44,6 +45,7 @@
     "watch": "tsc -watch -p ./tsconfig.json",
     "compile": "tsc -p ./tsconfig.json",
     "test": "node ./out/test/runTests.js",
+    "build_test_binaries": "cmake -Bout/cpp/build -Htest/cpp && cmake --build out/cpp/build",
     "pretest": "npm run compile",
     "package": "vsce package",
     "deploy": "node ./out/test/repo_scripts/deploy.js",
@@ -1562,6 +1564,18 @@
             "Google Mock will print both warnings and errors (less verbose). This is the default.",
             "Google Mock will print errors only (least verbose)."
           ]
+        },
+        "testMate.cpp.taef.teExecutablePath": {
+          "markdownDescription": "Path to TE.exe when executing test binaries with [TAEF](https://learn.microsoft.com/en-us/windows-hardware/drivers/taef/getting-started).",
+          "scope": "resource",
+          "type": "string",
+          "default": ""
+        },
+        "testMate.cpp.taef.dbhExecutablePath": {
+          "markdownDescription": "Path to [dbh.exe](https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/using-dbh), a Windows Driver tool we use to find corresponding C++ source file location for discovered TAEF tests.",
+          "scope": "resource",
+          "type": "string",
+          "default": ""
         }
       }
     }

@@ -29,6 +29,8 @@ export class WorkspaceShared {
     public enabledStrictPattern: boolean,
     public googleTestTreatGMockWarningAs: 'nothing' | 'failure',
     public googleTestGMockVerbose: 'default' | 'info' | 'warning' | 'error',
+    public taefExecutablePath: string | undefined,
+    public dbhExecutablePath: string | undefined,
     public hideUninterestingOutput: boolean,
   ) {
     this.taskPool = new TaskPool(workerMaxNumber);

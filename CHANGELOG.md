@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [4.9.0] - 2023-12-30
+
+### Changed
+
+- added support to run and debug tests developed with [Test Authoring and Execution Framework](https://learn.microsoft.com/en-us/windows-hardware/drivers/taef/getting-started), which is the test framework that ships with Windows Driver Kit (WDK)
+
 ## [4.8.0] - 2023-12-29
 
 ### Changed

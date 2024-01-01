@@ -13,7 +13,13 @@ export type SpawnOptionsWithoutStdio = fsw.SpawnOptionsWithoutStdio;
 
 //TODO:future, add cancellation flag
 export interface Spawner {
-  spawnAsync(cmd: string, args: string[], options: SpawnOptionsWithoutStdio, timeout?: number): Promise<SpawnReturns>;
+  spawnAsync(
+    cmd: string,
+    args: string[],
+    options: SpawnOptionsWithoutStdio,
+    timeout?: number,
+    stdinData?: string,
+  ): Promise<SpawnReturns>;
 
   spawn(cmd: string, args: string[], options: SpawnOptionsWithoutStdio): Promise<fsw.ChildProcessWithoutNullStreams>;
 }
@@ -41,7 +47,13 @@ export class SpawnBuilder {
 ///
 
 export class DefaultSpawner implements Spawner {
-  spawnAsync(cmd: string, args: string[], options: SpawnOptionsWithoutStdio, timeout?: number): Promise<SpawnReturns> {
+  spawnAsync(
+    cmd: string,
+    args: string[],
+    options: SpawnOptionsWithoutStdio,
+    timeout?: number,
+    stdinData?: string,
+  ): Promise<SpawnReturns> {
     return new Promise((resolve, reject) => {
       const ret: SpawnReturns = {
         pid: 0,
@@ -88,6 +100,10 @@ export class DefaultSpawner implements Spawner {
           resolve(ret);
         }
       });
+
+      if (stdinData) {
+        command.stdin.write(stdinData);
+      }
     });
   }
 
