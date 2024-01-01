@@ -4,6 +4,7 @@ import { AbstractExecutable } from './AbstractExecutable';
 import { Catch2Executable } from './Catch2/Catch2Executable';
 import { GoogleTestExecutable } from './GoogleTest/GoogleTestExecutable';
 import { DOCExecutable } from './doctest/DOCExecutable';
+import { TaefBinaryExecutable } from './Taef/TaefBinaryExecutable';
 import { FrameworkSpecificConfig, RunTaskConfig } from '../AdvancedExecutableInterface';
 import { Version } from '../Util';
 import { Spawner, SpawnOptionsWithoutStdio } from '../Spawner';
@@ -29,7 +30,38 @@ export class ExecutableFactory {
     private readonly _frameworkSpecific: Record<FrameworkType, FrameworkSpecificConfig>,
   ) {}
 
+  createSharedVarOfExec(frameworkSpecific: FrameworkSpecificConfig) {
+    return new SharedVarOfExec(
+      this._shared,
+      this._execName,
+      this._execDescription,
+      this._varToValue,
+      this._execPath,
+      this._execOptions,
+      frameworkSpecific,
+      this._parallelizationLimit,
+      this._markAsSkipped,
+      this._executableCloning,
+      this._runTask,
+      this._spawner,
+      this._resolvedSourceFileMap,
+    );
+  }
+
   async create(checkIsNativeExecutable: boolean): Promise<AbstractExecutable | undefined> {
+    if (this._execPath.endsWith('.dll') && this._shared.taefExecutablePath) {
+      const teExe = this._shared.taefExecutablePath;
+      const isTaefRunCheck = await this._shared.taskPool.scheduleTask(async () =>
+        this._spawner.spawnAsync(teExe, [this._execPath, '/list'], this._execOptions, this._shared.execParsingTimeout),
+      );
+      const teRegex = /Test Authoring and Execution Framework v(.+) for (.+)/;
+      const match = isTaefRunCheck.stdout.match(teRegex);
+      if (match) {
+        const sharedVarOfExec = this.createSharedVarOfExec({});
+        return new TaefBinaryExecutable(sharedVarOfExec);
+      }
+    }
+
     const runWithHelpRes = await this._shared.taskPool.scheduleTask(async () => {
       if (checkIsNativeExecutable) await c2fs.isNativeExecutableAsync(this._execPath);
 
@@ -56,22 +88,7 @@ export class ExecutableFactory {
       const match = runWithHelpRes.stdout.match(regex);
 
       if (match) {
-        const sharedVarOfExec = new SharedVarOfExec(
-          this._shared,
-          this._execName,
-          this._execDescription,
-          this._varToValue,
-          this._execPath,
-          this._execOptions,
-          frameworkSpecific,
-          this._parallelizationLimit,
-          this._markAsSkipped,
-          this._executableCloning,
-          this._runTask,
-          this._spawner,
-          this._resolvedSourceFileMap,
-        );
-
+        const sharedVarOfExec = this.createSharedVarOfExec(frameworkSpecific);
         return frameworkData.create(sharedVarOfExec, match);
       }
     }

@@ -1,12 +1,16 @@
-# C++ TestMate
+# C++ TAEFMate
 
-## A **Catch2**, **GoogleTest**, **doctest** and **GoogleBenchmark** Explorer for VSCode
+## A **TAEF**, **Catch2**, **GoogleTest**, **doctest**, and **GoogleBenchmark** Test Explorer for VSCode
 
-[![Visual Studio Marketplace](https://img.shields.io/vscode-marketplace/v/matepek.vscode-catch2-test-adapter.svg)](https://marketplace.visualstudio.com/items?itemName=matepek.vscode-catch2-test-adapter)
-[![GitHub issues](https://img.shields.io/github/issues/matepek/vscode-catch2-test-adapter?color=green)](https://github.com/matepek/vscode-catch2-test-adapter/issues)
-[![Visual Studio Marketplace](https://img.shields.io/vscode-marketplace/d/matepek.vscode-catch2-test-adapter.svg)](https://marketplace.visualstudio.com/items?itemName=matepek.vscode-catch2-test-adapter)
+### **This extension is a fork of [vscode-catch2-test-adapter](https://marketplace.visualstudio.com/items?itemName=matepek.vscode-catch2-test-adapter) with added support for [TAEF](https://learn.microsoft.com/en-us/windows-hardware/drivers/taef/) tests. If you don't need support for TAEF test execution and debugging, you should install the original extension.**
+
+
+[![Visual Studio Marketplace](https://img.shields.io/vscode-marketplace/v/dpar39.vscode-taef-test-adapter.svg)](https://marketplace.visualstudio.com/items?itemName=dpar39.vscode-taef-test-adapter)
+[![GitHub issues](https://img.shields.io/github/issues/dpar39/vscode-catch2-test-adapter?color=green)](https://github.com/dpar39/vscode-catch2-test-adapter/issues)
+[![Visual Studio Marketplace](https://img.shields.io/vscode-marketplace/d/dpar39.vscode-taef-test-adapter.svg)](https://marketplace.visualstudio.com/items?itemName=dpar39.vscode-taef-test-adapter)
 
 This extension allows you to run your
+[TAEF](https://learn.microsoft.com/en-us/windows-hardware/drivers/taef/getting-started),
 [Catch2](https://github.com/catchorg/Catch2),
 [Google Test](https://github.com/google/googletest)
 and [DOCtest](https://github.com/onqtam/doctest)
@@ -32,14 +36,14 @@ It also have basic support for [Google Benchmark](https://github.com/google/benc
 - One executable can be run parallel with distinct set of subtests to boost runtime.
 - Finds and recognises the executables by a given [glob pattern](https://code.visualstudio.com/docs/editor/codebasics#_advanced-search-options). ([More](#catch2TestExplorer_executables))
 - Automatically runs executables if it is modified ("_..._" -> "_Enable autorun_") or if a dependency is modified (`dependsOn`)
-- Grouping can be fully customized. ([Details](https://github.com/matepek/vscode-catch2-test-adapter/blob/master/documents/configuration/test.advancedExecutables.md#testgrouping))
+- Grouping can be fully customized. ([Details](https://github.com/dpar39/vscode-catch2-test-adapter/blob/master/documents/configuration/test.advancedExecutables.md#testgrouping))
 - and many more.. Ask on [gitter](https://gitter.im/CppTestMate/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge).
 
-## [Configuration](https://github.com/matepek/vscode-catch2-test-adapter/tree/master/documents/configuration)
+## [Configuration](https://github.com/dpar39/vscode-catch2-test-adapter/tree/master/documents/configuration)
 
 [settings.json]: https://code.visualstudio.com/docs/getstarted/settings
-[test.advancedexecutables]: https://github.com/matepek/vscode-catch2-test-adapter/blob/master/documents/configuration/test.advancedExecutables.md
-[debug.configtemplate]: https://github.com/matepek/vscode-catch2-test-adapter/blob/master/documents/configuration/debug.configTemplate.md
+[test.advancedexecutables]: https://github.com/dpar39/vscode-catch2-test-adapter/blob/master/documents/configuration/test.advancedExecutables.md
+[debug.configtemplate]: https://github.com/dpar39/vscode-catch2-test-adapter/blob/master/documents/configuration/debug.configTemplate.md
 
 The extension is **pre-configured** and it should find executables inside the working directory
 which match the following [_glob pattern_](https://code.visualstudio.com/docs/editor/codebasics#_advanced-search-options):
@@ -52,9 +56,9 @@ Not good enough for you?!: Edit your `.vscode/`[settings.json] file according to
 
 | `testMate.cpp.___`                        | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `test.executables`                        | A [glob pattern](https://code.visualstudio.com/docs/editor/codebasics#_advanced-search-options) to find test executables. (Relative to the workspace folder or absolute path.) Empty string means disabled. For more option set [testMate.cpp.test.advancedExecutables](https://github.com/matepek/vscode-catch2-test-adapter/blob/master/documents/configuration/test.advancedExecutables.md) instead of this. NOTE: if `testMate.cpp.test.advancedExecutables` is set then this is ignored. |
-| [test.advancedExecutables]                | Array of executables with a lot of options. (If this is set then `testMate.cpp.test.executables` is ignored.) ([Details](https://github.com/matepek/vscode-catch2-test-adapter/blob/master/documents/configuration/test.advancedExecutables.md)).                                                                                                                                                                                                                                             |
-| `test.workingDirectory`                   | Sets the working directory of the test executable (relative to the workspace folder or absolute path). Note: `testMate.cpp.advancedExecutables` overwrites it locally. ([Variables](https://github.com/matepek/vscode-catch2-test-adapter/blob/master/documents/configuration/test.advancedExecutables.md#variables))                                                                                                                                                                         |
+| `test.executables`                        | A [glob pattern](https://code.visualstudio.com/docs/editor/codebasics#_advanced-search-options) to find test executables. (Relative to the workspace folder or absolute path.) Empty string means disabled. For more option set [testMate.cpp.test.advancedExecutables](https://github.com/dpar39/vscode-catch2-test-adapter/blob/master/documents/configuration/test.advancedExecutables.md) instead of this. NOTE: if `testMate.cpp.test.advancedExecutables` is set then this is ignored. |
+| [test.advancedExecutables]                | Array of executables with a lot of options. (If this is set then `testMate.cpp.test.executables` is ignored.) ([Details](https://github.com/dpar39/vscode-catch2-test-adapter/blob/master/documents/configuration/test.advancedExecutables.md)).                                                                                                                                                                                                                                             |
+| `test.workingDirectory`                   | Sets the working directory of the test executable (relative to the workspace folder or absolute path). Note: `testMate.cpp.advancedExecutables` overwrites it locally. ([Variables](https://github.com/dpar39/vscode-catch2-test-adapter/blob/master/documents/configuration/test.advancedExecutables.md#variables))                                                                                                                                                                         |
 | `test.randomGeneratorSeed`                | Shuffles the tests with the given random. Catch2: [--rng-seed (<integer> or 'time')](https://github.com/catchorg/Catch2/blob/master/docs/command-line.md#rng-seed); Google Test: [--gtest_random_seed=<integer>](https://github.com/google/googletest/blob/master/googletest/docs/advanced.md#shuffling-the-tests);                                                                                                                                                                           |
 | `test.runtimeLimit`                       | [seconds] Test executable is running in a process. In case of an infinite loop it will run forever unless this parameter is set. It applies instantly. (0 means infinite)                                                                                                                                                                                                                                                                                                                     |
 | `test.parallelExecutionLimit`             | Maximizes the number of the parallel test executions. (It applies instantly.) Note: If your executables depend on the **same resource** exclusively then this **could cause a problem**.                                                                                                                                                                                                                                                                                                      |
@@ -70,7 +74,9 @@ Not good enough for you?!: Edit your `.vscode/`[settings.json] file according to
 | `log.logpanel`                            | Creates a new output channel and write the log messages there. For debugging. Enabling it could slow down your vscode.                                                                                                                                                                                                                                                                                                                                                                        |
 | `log.logfile`                             | Writes the log message into the given file. Empty means disabled.                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | `gtest.treatGmockWarningAs`               | Forces the test to be failed even it is passed if it contains the string `GMOCK_WARNING:`. (You may should consider using [testing::StrictMock<T>](https://github.com/google/googletest/blob/master/googlemock/docs/cook_book.md#the-nice-the-strict-and-the-naggy-nicestrictnaggy))                                                                                                                                                                                                          |
-| `gtest.gmockVerbose`                      | Sets [--gmock_verbose=...](https://github.com/google/googletest/blob/master/googlemock/docs/cheat_sheet.md#flags). (Note: executable has to be linked to gmock `gmock_main` not `gtest_main`)                                                                                                                                                                                                                                                                                                 |
+| `gtest.gmockVerbose`                      | Sets [--gmock_verbose=...](https://github.com/google/googletest/blob/master/googlemock/docs/cheat_sheet.md#flags). (Note: executable has to be linked to gmock `gmock_main` not `gtest_main`)                                                                                                                                                                                                                                                                                             |
+| `taef.teExecutablePath`                   | Custom executable path for TAEF's [TE.exe](https://learn.microsoft.com/en-us/windows-hardware/drivers/taef/overview-of-executing-tests). If left empty we try to find it in `PATH` environment variable |
+| `taef.dbhExecutablePath`                  | Custom executable path to [DBH.exe](https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/dbh) for finding test's source code location. If left empty we try to find it in `PATH` environment variable |
 
 Plenty of more **fine-tuning options** are available under [test.advancedExecutables] like:
 
@@ -87,8 +93,8 @@ Plenty of more **fine-tuning options** are available under [test.advancedExecuta
 | `testMate.cmd.reload-workspaces` | Force reload workspaces (clean slate) |
 | `testing.refreshTests`           | Force reload workspaces (clean slate) |
 
-## [License](https://github.com/matepek/vscode-catch2-test-adapter/blob/master/LICENSE)
+## [License](https://github.com/dpar39/vscode-catch2-test-adapter/blob/master/LICENSE)
 
-## [Support](https://github.com/matepek/vscode-catch2-test-adapter/blob/master/documents/support.md)
+## [Support](https://github.com/dpar39/vscode-catch2-test-adapter/blob/master/documents/support.md)
 
 ## [Contribution](CONTRIBUTING.md)

@@ -1,4 +1,7 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
+import * as pathlib from 'path';
+
 import { Logger } from './Logger';
 import { ConfigOfExecGroup } from './ConfigOfExecGroup';
 import { WorkspaceShared } from './WorkspaceShared';
@@ -25,6 +28,7 @@ const enum Section {
   'debug' = 'debug',
   'log' = 'log',
   'gtest' = 'gtest',
+  'taef' = 'taef',
 }
 
 export type Config =
@@ -48,7 +52,9 @@ export type Config =
   | 'log.logSentry'
   | 'log.userId'
   | 'gtest.treatGmockWarningAs'
-  | 'gtest.gmockVerbose';
+  | 'gtest.gmockVerbose'
+  | 'taef.teExecutablePath'
+  | 'taef.dbhExecutablePath';
 
 ///
 
@@ -93,13 +99,14 @@ export class Configurations {
   }
 
   // eslint-disable-next-line
-  getValues(): { test: any; discovery: any; debug: any; log: any; gtest: any } {
+  getValues(): { test: any; discovery: any; debug: any; log: any; gtest: any; taef: any } {
     return {
       test: this._cfg.get(Section.test),
       discovery: this._cfg.get(Section.discovery),
       debug: this._cfg.get(Section.debug),
       log: this._cfg.get(Section.log),
       gtest: this._cfg.get(Section.gtest),
+      taef: this._cfg.get(Section.taef),
     };
   }
 
@@ -441,6 +448,40 @@ export class Configurations {
 
   getGoogleTestGMockVerbose(): 'default' | 'info' | 'warning' | 'error' {
     return this._getD<'default' | 'info' | 'warning' | 'error'>('gtest.gmockVerbose', 'default');
+  }
+
+  _findExecutable(exeFileName: string): string | undefined {
+    const envPath = process.env.PATH || '';
+    const pathDirs = envPath.replace(/["]+/g, '').split(pathlib.delimiter).filter(Boolean);
+    for (const pathDir of pathDirs) {
+      const exeFullPath = pathlib.join(pathDir, exeFileName);
+      if (fs.existsSync(exeFullPath)) {
+        return exeFullPath;
+      }
+    }
+    return undefined;
+  }
+
+  getTaefExecutablePath(): string | undefined {
+    const teExe = this._getD<string | undefined>('taef.teExecutablePath', undefined);
+    if (teExe && fs.existsSync(teExe)) {
+      return teExe;
+    }
+    if (process.env.PkgTaef_Redist) {
+      const teExe = pathlib.join(process.env.PkgTaef_Redist, 'build', 'Binaries', 'Release', 'x64', 'TE.exe');
+      if (fs.existsSync(teExe)) {
+        return teExe;
+      }
+    }
+    return this._findExecutable('TE.exe');
+  }
+
+  getDbhExecutablePath(): string | undefined {
+    const dbhExe = this._getD<string | undefined>('taef.dbhExecutablePath', undefined);
+    if (dbhExe && fs.existsSync(dbhExe)) {
+      return dbhExe;
+    }
+    return this._findExecutable('dbh.exe');
   }
 
   getExecutableConfigs(shared: WorkspaceShared): ConfigOfExecGroup[] {

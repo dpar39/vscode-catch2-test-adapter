@@ -149,6 +149,8 @@ export class WorkspaceManager implements vscode.Disposable {
       configuration.getEnableStrictPattern(),
       configuration.getGoogleTestTreatGMockWarningAs(),
       configuration.getGoogleTestGMockVerbose(),
+      configuration.getTaefExecutablePath(),
+      configuration.getDbhExecutablePath(),
       true,
     );
 
@@ -401,7 +403,9 @@ export class WorkspaceManager implements vscode.Disposable {
       const configuration = this._getConfiguration(this._shared.log);
 
       const argsArray = executable.getDebugParams([test], configuration.getDebugBreakOnFailure());
-      setDebugArgs(executable.shared.path, argsArray);
+
+      const debuggableExePath = await executable.getExecutablePath(true);
+      setDebugArgs(debuggableExePath, argsArray);
 
       const argsArrayFunc = async (): Promise<string[]> => argsArray;
 
@@ -446,7 +450,7 @@ export class WorkspaceManager implements vscode.Disposable {
       const varToResolve: ResolveRuleAsync[] = [
         ...executable.shared.varToValue,
         { resolve: '${label}', rule: test.label },
-        { resolve: '${exec}', rule: executable.shared.path },
+        { resolve: '${exec}', rule: debuggableExePath },
         { resolve: '${args}', rule: argsArrayFunc }, // deprecated
         { resolve: '${argsArray}', rule: argsArrayFunc },
         { resolve: '${argsArrayFlat}', rule: argsArrayFunc, isFlat: true },
