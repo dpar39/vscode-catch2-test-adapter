@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [4.9.2] - 2024-01-04
+
+### Changed
+
+- fix to match file casing of source files when discovered by DBH.exe, otherwise test Uris don't exactly match open files in VSCode.
+- fix for TAEF test filter arguments not being correct when running a subset of selected tests.
+
 ## [4.9.0] - 2023-12-30
 
 ### Changed

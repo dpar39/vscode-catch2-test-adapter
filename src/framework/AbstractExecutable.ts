@@ -831,7 +831,7 @@ export abstract class AbstractExecutable<TestT extends AbstractTest = AbstractTe
     if (typeof file != 'string') return undefined;
 
     // normalize before apply resolvedSourceFileMap because it is normalize too
-    // this is for better platfrom independent resolution
+    // this is for better platform independent resolution
     let resolved = pathlib.normalize(file);
 
     for (const m in this.shared.resolvedSourceFileMap) {

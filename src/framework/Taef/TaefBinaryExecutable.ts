@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as ansi from 'ansi-colors';
+import * as fs from 'fs';
 
 import { AbstractExecutable as AbstractExecutable, HandleProcessResult } from '../AbstractExecutable';
 import { TaefBinaryTest } from './TaefBinaryTest';
@@ -37,6 +38,9 @@ export class TaefBinaryExecutable extends AbstractExecutable<TaefBinaryTest> {
     typeParam: string | undefined,
     valueParam: string | undefined,
   ): Promise<TaefBinaryTest> => {
+    if (file) {
+      file = fs.realpathSync.native(file!);
+    }
     const resolvedFile = this.findSourceFilePath(file);
     const [suiteName, testName] = splitFullTestName(ftn);
 
@@ -90,29 +94,6 @@ export class TaefBinaryExecutable extends AbstractExecutable<TaefBinaryTest> {
     }
   }
 
-  private async getFileLine(ftn: string): Promise<[string, string?, string?]> {
-    const binaryPath = this.shared.path;
-    const dbhExe = this.shared.shared.dbhExecutablePath!;
-    if (!dbhExe) {
-      return [ftn, undefined, undefined];
-    }
-    let args = [binaryPath, 'name', ftn];
-    let proc = await this.shared.spawner.spawn(dbhExe, args, this.shared.options);
-    let [stdout, _] = await pipeOutputStreams2String(proc.stdout, proc.stderr);
-    const mAddr = stdout.match(/addr :\s{2,}([a-f0-9]+)/m);
-    if (mAddr) {
-      args = [binaryPath, 'laddr', mAddr[1]];
-      proc = await this.shared.spawner.spawn(dbhExe, args, this.shared.options);
-      [stdout, _] = await pipeOutputStreams2String(proc.stdout, proc.stderr);
-      const mFile = stdout.match(/file : (.+)/m);
-      const mLine = stdout.match(/line : (\d+)/m);
-      if (mFile && mLine) {
-        return [ftn, mFile[1], (parseInt(mLine[1]) - 1).toString()];
-      }
-    }
-    return [ftn, undefined, undefined];
-  }
-
   private async getFileLineMapping(fullTestNames: string[]): Promise<Array<[string, string?, string?]>> {
     const binaryPath = this.shared.path;
     const dbhExe = this.shared.shared.dbhExecutablePath!;
@@ -144,6 +125,7 @@ export class TaefBinaryExecutable extends AbstractExecutable<TaefBinaryTest> {
 
     const colouring = this.shared.enableDebugColouring ? 'true' : 'false';
     execParams.push(`/coloredConsoleOutput:${colouring}`);
+    execParams.push('/logOutput:Low');
 
     if (childrenToRun.length == this._numTests()) {
       return execParams; // entire binary will be run
@@ -169,7 +151,8 @@ export class TaefBinaryExecutable extends AbstractExecutable<TaefBinaryTest> {
       }
     }
 
-    execParams.push(`/select:` + testFilterNames.join(' OR '));
+    execParams.push('/select:');
+    execParams.push(testFilterNames.join(' OR '));
     return execParams;
   }
 
@@ -202,7 +185,7 @@ export class TaefBinaryExecutable extends AbstractExecutable<TaefBinaryTest> {
             let test = executable._getTest(ftn);
             if (!test) {
               log.info('TestCase not found in children', ftn);
-              const [_, file, line] = await executable.getFileLine(ftn);
+              const [[_, file, line]] = await executable.getFileLineMapping([ftn]);
               test = await executable._createAndAddTest(ftn, file, line, undefined, undefined);
               unexpectedTests.push(test);
             } else {
