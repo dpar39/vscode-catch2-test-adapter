@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [4.9.2]
+
 ### Changed
 
 - fix to match file casing of source files when discovered by DBH.exe, otherwise test Uris don't exactly match open files in VSCode.
